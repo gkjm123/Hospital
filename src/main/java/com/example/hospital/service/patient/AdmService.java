@@ -37,6 +37,7 @@ public class AdmService {
         Regist regist = registRepository.findByPatient_IdAndRegistType(patient.getId(), RegistType.REGISTERED)
                 .orElseThrow(() -> new CustomException(ErrorCode.REGIST_NOT_FOUND));
 
+        //본인 아이디로 처방된 모든 약, 검사 처방을 처방일이 최근인 순서로 반환
         List<BaseOrder> orders = baseOrderRepository.findAllByRegist_IdOrderByOrderStartTimeDesc(regist.getId());
 
         if (orders.isEmpty()) {
@@ -53,18 +54,22 @@ public class AdmService {
         MedicineOrder order = medicineOrderRepository.findById(orderId)
                 .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
 
+        //본인에게 난 처방이 아닌 경우
         if (!order.getRegist().getPatient().getId().equals(patient.getId())) {
             throw new CustomException(ErrorCode.PATIENT_NOT_MATCH);
         }
 
+        //진행중인 접수건에 대한 처방이 아닌 경우(ex.처방 ID가 이미 퇴원한 접수건에 대한 것임)
         if (!order.getRegist().getRegistType().equals(RegistType.REGISTERED)) {
             throw new CustomException(ErrorCode.REGIST_STATUS_NOT_PRESENT);
         }
 
+        //이미 Completed 된 처방임(ex.이미 불출해간 약)
         if (!order.getOrderStatusType().equals(OrderStatusType.ORDERED)) {
             throw new CustomException(ErrorCode.ORDER_COMPLETED);
         }
 
+        //약을 약국에서 타간것(불출)으로 취급. 처방을 Completed 상태로 바꿔준다.
         order.setOrderStatusType(OrderStatusType.COMPLETED);
         return MedicineOrderResponse.fromEntity(medicineOrderRepository.save(order));
     }

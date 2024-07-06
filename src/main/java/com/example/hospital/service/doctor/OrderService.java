@@ -62,6 +62,7 @@ public class OrderService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //약 처방하기: 약 종류,타입,복용량 등을 폼에서 읽어와서 세팅한다.
         MedicineOrder medicineOrder = MedicineOrder.builder()
                 .regist(regist)
                 .orderType(OrderType.MEDICINE)
@@ -76,6 +77,7 @@ public class OrderService {
         //약 비용 = 한알당 가격 * 일회 복용량 * 하루 복용횟수 * 복용일수
         Long cost = form.getMedicineType().getCost() * form.getVolume() * form.getTakeType().getTime() * form.getTakeDate();
         medicineOrder.setCost(cost);
+
         return MedicineOrderResponse.fromEntity(medicineOrderRepository.save(medicineOrder));
     }
 
@@ -98,6 +100,7 @@ public class OrderService {
                 .testType(form.getTestType())
                 .build();
 
+        //검사는 타입에 따라 비용이 정해져있고 특별한 추가 계산이 필요 없다.
         testOrder.setCost(form.getTestType().getCost());
         return TestOrderResponse.fromEntity(testOrderRepository.save(testOrder));
     }
@@ -133,10 +136,12 @@ public class OrderService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //진행중인 접수건에 대해서만 처방 삭제 가능
         if (!order.getRegist().getRegistType().equals(RegistType.REGISTERED)) {
             throw new CustomException(ErrorCode.REGIST_STATUS_NOT_PRESENT);
         }
 
+        //약이 불출되었거나 검사가 진행되었으면 오더 타입이 Completed 로 변경되며 이때는 처방 삭제 불가
         if (order.getOrderStatusType().equals(OrderStatusType.COMPLETED)) {
             throw new CustomException(ErrorCode.ORDER_COMPLETED);
         }
@@ -155,14 +160,18 @@ public class OrderService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //진행중인 접수건에 대해서만 퇴원 처방 가능
         if (!regist.getRegistType().equals(RegistType.REGISTERED)) {
             throw new CustomException(ErrorCode.REGIST_STATUS_NOT_PRESENT);
         }
 
+        //퇴원하는 접수건에 등록된 모든 처방(약, 검사)의 비용을 합산한 최종 입원료를 접수건에 업데이트
         Long cost = baseOrderRepository.findAll().stream().mapToLong(BaseOrder::getCost).sum();
-
         regist.setCost(cost);
+
+        //접수건의 상태를 퇴원 대기중으로 바꾼다. 이 상태에서만 환자가 정산 가능
         regist.setRegistType(RegistType.WAIT_FOR_PAY);
+
         return RegistResponse.fromEntity(registRepository.save(regist));
     }
 }

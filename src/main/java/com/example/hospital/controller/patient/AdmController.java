@@ -15,6 +15,7 @@ import java.util.List;
 public class AdmController {
     private final AdmService admService;
 
+    //본인에게 난 모든 처방 확인하기(약 또는 검사)
     @PreAuthorize("hasRole('PATIENT')")
     @GetMapping("/get-orders")
     public List<BaseOrderResponse> getOrders(@RequestHeader(name = "TOKEN") String token) {
