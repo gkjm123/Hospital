@@ -49,8 +49,10 @@ public class RecordService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //검사를 시행 완료함. 처방의 타입을 Completed 로 변경
         testOrder.setOrderStatusType(OrderStatusType.COMPLETED);
 
+        //검사 결과를 폼에서 읽어와 세팅후 저장
         TestRecord testRecord = TestRecord.builder()
                 .testOrder(testOrder)
                 .result(form.getResult())
@@ -106,6 +108,7 @@ public class RecordService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //입원시 null 로 세팅되었던 진단명 항목에 폼의 값을 넣어줌
         regist.setDiagnosis(form.getName());
         return RegistResponse.fromEntity(registRepository.save(regist));
     }
@@ -121,6 +124,7 @@ public class RecordService {
             throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
         }
 
+        //폼에서 값을 읽어와 소견서 세팅
         Opinion opinion = Opinion.builder()
                 .regist(regist)
                 .opinion(form.getOpinion())

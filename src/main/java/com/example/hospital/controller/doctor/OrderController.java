@@ -19,12 +19,14 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
 
+    //자신에게 접수된 환자건 조회
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping("/get-regists")
     public List<RegistResponse> getRegists(@RequestHeader(name = "TOKEN") String token) {
         return orderService.getRegists(token);
     }
 
+    //약 처방하기
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping("/order-medicine")
     public MedicineOrderResponse orderMedicine(@RequestHeader(name = "TOKEN") String token,
@@ -33,6 +35,7 @@ public class OrderController {
         return orderService.orderMedicine(token, form);
     }
 
+    //검사 처방하기
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping("/order-test")
     public TestOrderResponse orderTest(@RequestHeader(name = "TOKEN") String token,
@@ -41,6 +44,7 @@ public class OrderController {
         return orderService.orderTest(token, form);
     }
 
+    //접수건에 대한 모든 처방 확인
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping("/get-orders")
     public List<BaseOrderResponse> getOrders(@RequestHeader(name = "TOKEN") String token,
@@ -49,6 +53,7 @@ public class OrderController {
         return orderService.getOrders(token, registId);
     }
 
+    //처방 삭제(처방 수행이 완료되기 전까지만 가능)
     @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping("/cancel-order")
     public String cancelOrder(@RequestHeader(name = "TOKEN") String token,
@@ -58,6 +63,7 @@ public class OrderController {
         return "처방 삭제 완료";
     }
 
+    //퇴원 처방
     @PreAuthorize("hasRole('DOCTOR')")
     @PutMapping("/discharge")
     public RegistResponse discharge(@RequestHeader(name = "TOKEN") String token,
