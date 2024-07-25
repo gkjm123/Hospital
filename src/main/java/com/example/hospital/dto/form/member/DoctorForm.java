@@ -8,9 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorForm {
-    private String loginId;
-    private String password;
-    private String name;
-    private String phone;
-    private String major;
+
+  private String loginId;
+  private String password;
+  private String name;
+  private String phone;
+  private String major;
 }

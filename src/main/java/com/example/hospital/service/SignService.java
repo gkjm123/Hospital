@@ -19,71 +19,72 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class SignService {
-    private final SecurityManager securityManager;
-    private final DoctorRepository doctorRepository;
-    private final PatientRepository patientRepository;
 
-    @Transactional
-    public DoctorResponse doctorSignUp(DoctorForm form) {
-        if (doctorRepository.existsByLoginId(form.getLoginId())) {
-            throw new CustomException(ErrorCode.ID_EXIST);
-        }
+  private final SecurityManager securityManager;
+  private final DoctorRepository doctorRepository;
+  private final PatientRepository patientRepository;
 
-        Doctor doctor = Doctor.builder()
-                .loginId(form.getLoginId())
-                .name(form.getName())
-                .phone(form.getPhone())
-                .major(form.getMajor())
-                .build();
-
-        doctor.setPassword(securityManager.passwordEncode(form.getPassword()));
-        doctor.setRole("ROLE_DOCTOR");
-        return DoctorResponse.fromEntity(doctorRepository.save(doctor));
+  @Transactional
+  public DoctorResponse doctorSignUp(DoctorForm form) {
+    if (doctorRepository.existsByLoginId(form.getLoginId())) {
+      throw new CustomException(ErrorCode.ID_EXIST);
     }
 
-    @Transactional
-    public String doctorSignIn(SignInForm form) {
-        Doctor doctor = doctorRepository.findByLoginId(form.getLoginId())
-                        .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
+    Doctor doctor = Doctor.builder()
+        .loginId(form.getLoginId())
+        .name(form.getName())
+        .phone(form.getPhone())
+        .major(form.getMajor())
+        .build();
 
-        if (!securityManager.checkPassword(form.getPassword(), doctor.getPassword())) {
-            throw new CustomException(ErrorCode.ID_PASSWORD_INVALID);
-        }
+    doctor.setPassword(securityManager.passwordEncode(form.getPassword()));
+    doctor.setRole("ROLE_DOCTOR");
+    return DoctorResponse.fromEntity(doctorRepository.save(doctor));
+  }
 
-        String token = securityManager.createToken(form.getLoginId());
-        return "doctor " + token;
+  @Transactional
+  public String doctorSignIn(SignInForm form) {
+    Doctor doctor = doctorRepository.findByLoginId(form.getLoginId())
+        .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
+
+    if (!securityManager.checkPassword(form.getPassword(), doctor.getPassword())) {
+      throw new CustomException(ErrorCode.ID_PASSWORD_INVALID);
     }
 
-    @Transactional
-    public PatientResponse patientSignUp(PatientForm form) {
-        if (patientRepository.existsByLoginId(form.getLoginId())) {
-            throw new CustomException(ErrorCode.ID_EXIST);
-        }
+    String token = securityManager.createToken(form.getLoginId());
+    return "doctor " + token;
+  }
 
-        Patient patient = Patient.builder()
-                .loginId(form.getLoginId())
-                .name(form.getName())
-                .sex(form.getSex())
-                .age(form.getAge())
-                .phone(form.getPhone())
-                .address(form.getAddress())
-                .build();
-
-        patient.setPassword(securityManager.passwordEncode(form.getPassword()));
-        patient.setRole("ROLE_PATIENT");
-        return PatientResponse.fromEntity(patientRepository.save(patient));
+  @Transactional
+  public PatientResponse patientSignUp(PatientForm form) {
+    if (patientRepository.existsByLoginId(form.getLoginId())) {
+      throw new CustomException(ErrorCode.ID_EXIST);
     }
 
-    @Transactional
-    public String patientSignIn(SignInForm form) {
-        Patient patient = patientRepository.findByLoginId(form.getLoginId())
-                .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
+    Patient patient = Patient.builder()
+        .loginId(form.getLoginId())
+        .name(form.getName())
+        .sex(form.getSex())
+        .age(form.getAge())
+        .phone(form.getPhone())
+        .address(form.getAddress())
+        .build();
 
-        if (!securityManager.checkPassword(form.getPassword(), patient.getPassword())) {
-            throw new CustomException(ErrorCode.ID_PASSWORD_INVALID);
-        }
+    patient.setPassword(securityManager.passwordEncode(form.getPassword()));
+    patient.setRole("ROLE_PATIENT");
+    return PatientResponse.fromEntity(patientRepository.save(patient));
+  }
 
-        String token = securityManager.createToken(form.getLoginId());
-        return "patient " + token;
+  @Transactional
+  public String patientSignIn(SignInForm form) {
+    Patient patient = patientRepository.findByLoginId(form.getLoginId())
+        .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
+
+    if (!securityManager.checkPassword(form.getPassword(), patient.getPassword())) {
+      throw new CustomException(ErrorCode.ID_PASSWORD_INVALID);
     }
+
+    String token = securityManager.createToken(form.getLoginId());
+    return "patient " + token;
+  }
 }

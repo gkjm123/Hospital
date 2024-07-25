@@ -14,16 +14,17 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Opinion {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Regist regist;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    //소견
-    private String opinion;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Regist regist;
 
-    @CreationTimestamp
-    private LocalDateTime created;
+  //소견
+  private String opinion;
+
+  @CreationTimestamp
+  private LocalDateTime created;
 }

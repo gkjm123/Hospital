@@ -6,6 +6,6 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum OrderType {
-    MEDICINE,
-    TEST
+  MEDICINE,
+  TEST
 }

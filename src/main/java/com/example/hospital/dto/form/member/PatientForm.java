@@ -9,11 +9,12 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PatientForm {
-    private String loginId;
-    private String password;
-    private String name;
-    private SexType sex;
-    private Long age;
-    private String phone;
-    private String address;
+
+  private String loginId;
+  private String password;
+  private String name;
+  private SexType sex;
+  private Long age;
+  private String phone;
+  private String address;
 }

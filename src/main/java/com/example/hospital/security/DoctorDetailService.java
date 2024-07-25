@@ -7,25 +7,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class DoctorDetailService implements UserDetailsService {
-    private final DoctorRepository doctorRepository;
-    private final SecurityManager securityManager;
+public class DoctorDetailService implements MemberDetailService {
 
-    @Override
-    public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException {
-        String loginId = securityManager.parseToken(token).getSubject();
-        return doctorRepository.findByLoginId(loginId)
-                .orElseThrow(() -> new CustomException(ErrorCode.DOCTOR_NOT_FOUND));
-    }
+  private final DoctorRepository doctorRepository;
+  private final SecurityManager securityManager;
 
-    public Authentication getAuthentication(String token) {
-        UserDetails userDetails = loadUserByUsername(token);
-        return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-    }
+  @Override
+  public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException {
+    String loginId = securityManager.parseToken(token).getSubject();
+    return doctorRepository.findByLoginId(loginId)
+        .orElseThrow(() -> new CustomException(ErrorCode.DOCTOR_NOT_FOUND));
+  }
+
+  @Override
+  public Authentication getAuthentication(String token) {
+    UserDetails userDetails = loadUserByUsername(token);
+    return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+  }
 }

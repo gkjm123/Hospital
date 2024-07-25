@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DiagnosisForm {
-    private Long registId;
-    private String name;
+
+  private Long registId;
+  private String name;
 }

@@ -16,32 +16,33 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Regist {
-    @Id
-    @GeneratedValue
-    private Long id;
 
-    //의사
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Doctor doctor;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    //환자
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Patient patient;
+  //의사
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Doctor doctor;
 
-    //진단명
-    private String diagnosis;
+  //환자
+  @ManyToOne(fetch = FetchType.LAZY)
+  private Patient patient;
 
-    //접수상태
-    @Enumerated(EnumType.STRING)
-    private RegistType registType;
+  //진단명
+  private String diagnosis;
 
-    //비용
-    private Long cost;
+  //접수상태
+  @Enumerated(EnumType.STRING)
+  private RegistType registType;
 
-    //접수일(입원일)
-    @CreationTimestamp
-    private LocalDateTime registrationDate;
+  //비용
+  private Long cost;
 
-    //퇴원일
-    private LocalDateTime dischargeDate;
+  //접수일(입원일)
+  @CreationTimestamp
+  private LocalDateTime registrationDate;
+
+  //퇴원일
+  private LocalDateTime dischargeDate;
 }

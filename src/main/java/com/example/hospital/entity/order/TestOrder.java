@@ -14,7 +14,8 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestOrder extends BaseOrder {
-    //검사 종류
-    @Enumerated(EnumType.STRING)
-    private TestType testType;
+
+  //검사 종류
+  @Enumerated(EnumType.STRING)
+  private TestType testType;
 }

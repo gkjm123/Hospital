@@ -11,19 +11,20 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DoctorResponse {
-    private Long id;
-    private String name;
-    private String phone;
-    private String major;
-    private LocalDateTime createdAt;
 
-    public static DoctorResponse fromEntity(Doctor doctor) {
-        return DoctorResponse.builder()
-                .id(doctor.getId())
-                .name(doctor.getName())
-                .phone(doctor.getPhone())
-                .major(doctor.getMajor())
-                .createdAt(doctor.getCreatedAt())
-                .build();
-    }
+  private Long id;
+  private String name;
+  private String phone;
+  private String major;
+  private LocalDateTime createdAt;
+
+  public static DoctorResponse fromEntity(Doctor doctor) {
+    return DoctorResponse.builder()
+        .id(doctor.getId())
+        .name(doctor.getName())
+        .phone(doctor.getPhone())
+        .major(doctor.getMajor())
+        .createdAt(doctor.getCreatedAt())
+        .build();
+  }
 }

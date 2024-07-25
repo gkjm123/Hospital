@@ -8,5 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RegistForm {
-    private Long doctorId;
+
+  private Long doctorId;
 }
