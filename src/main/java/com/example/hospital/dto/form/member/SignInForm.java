@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SignInForm {
-    private String loginId;
-    private String password;
+
+  private String loginId;
+  private String password;
 }

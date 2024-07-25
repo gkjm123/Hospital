@@ -15,46 +15,45 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BaseOrderResponse {
-    private Long id;
-    private Long registId;
-    private OrderType orderType;
-    private OrderStatusType orderStatusType;
-    private Long cost;
-    private LocalDateTime orderCreateTime;
-    private LocalDate orderStartDate;
 
-    private MedicineType medicineType;
-    private Long volume;
-    private TakeType takeType;
-    private Long takeDate;
+  private Long id;
+  private Long registId;
+  private OrderType orderType;
+  private OrderStatusType orderStatusType;
+  private Long cost;
+  private LocalDateTime orderCreateTime;
+  private LocalDate orderStartDate;
 
-    private TestType testType;
+  private MedicineType medicineType;
+  private Long volume;
+  private TakeType takeType;
+  private Long takeDate;
 
-    public static BaseOrderResponse fromEntity(BaseOrder baseOrder) {
-        BaseOrderResponse response =  BaseOrderResponse.builder()
-                .id(baseOrder.getId())
-                .registId(baseOrder.getRegist().getId())
-                .orderType(baseOrder.getOrderType())
-                .orderStatusType(baseOrder.getOrderStatusType())
-                .cost(baseOrder.getCost())
-                .orderCreateTime(baseOrder.getOrderCreateTime())
-                .orderStartDate(baseOrder.getOrderStartTime())
-                .build();
+  private TestType testType;
 
-        if (baseOrder.getOrderType().equals(OrderType.MEDICINE)) {
-            MedicineOrder medicineOrder = (MedicineOrder) baseOrder;
+  public static BaseOrderResponse fromEntity(BaseOrder baseOrder) {
+    BaseOrderResponse response = BaseOrderResponse.builder()
+        .id(baseOrder.getId())
+        .registId(baseOrder.getRegist().getId())
+        .orderType(baseOrder.getOrderType())
+        .orderStatusType(baseOrder.getOrderStatusType())
+        .cost(baseOrder.getCost())
+        .orderCreateTime(baseOrder.getOrderCreateTime())
+        .orderStartDate(baseOrder.getOrderStartTime())
+        .build();
 
-            response.setMedicineType(medicineOrder.getMedicineType());
-            response.setVolume(medicineOrder.getVolume());
-            response.setTakeType(medicineOrder.getTakeType());
-            response.setTakeDate(medicineOrder.getTakeDate());
-        }
+    if (baseOrder.getOrderType().equals(OrderType.MEDICINE)) {
+      MedicineOrder medicineOrder = (MedicineOrder) baseOrder;
 
-        else if (baseOrder.getOrderType().equals(OrderType.TEST)) {
-            TestOrder testOrder = (TestOrder) baseOrder;
-            response.setTestType(testOrder.getTestType());
-        }
-
-        return response;
+      response.setMedicineType(medicineOrder.getMedicineType());
+      response.setVolume(medicineOrder.getVolume());
+      response.setTakeType(medicineOrder.getTakeType());
+      response.setTakeDate(medicineOrder.getTakeDate());
+    } else if (baseOrder.getOrderType().equals(OrderType.TEST)) {
+      TestOrder testOrder = (TestOrder) baseOrder;
+      response.setTestType(testOrder.getTestType());
     }
+
+    return response;
+  }
 }

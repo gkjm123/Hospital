@@ -13,13 +13,14 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MedicineOrderForm {
-    private Long registId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate orderStartDate;
+  private Long registId;
 
-    private MedicineType medicineType;
-    private Long volume;
-    private TakeType takeType;
-    private Long takeDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate orderStartDate;
+
+  private MedicineType medicineType;
+  private Long volume;
+  private TakeType takeType;
+  private Long takeDate;
 }

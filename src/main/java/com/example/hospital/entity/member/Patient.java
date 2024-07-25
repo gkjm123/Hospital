@@ -19,32 +19,33 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Patient implements UserDetails {
-    @Id
-    @GeneratedValue
-    private Long id;
 
-    private String loginId;
-    private String password;
-    private String name;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private SexType sex;
+  private String loginId;
+  private String password;
+  private String name;
 
-    private Long age;
-    private String phone;
-    private String address;
-    private String role;
+  @Enumerated(EnumType.STRING)
+  private SexType sex;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  private Long age;
+  private String phone;
+  private String address;
+  private String role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
-    }
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
-    @Override
-    public String getUsername() {
-        return "";
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority(role));
+  }
+
+  @Override
+  public String getUsername() {
+    return "";
+  }
 }

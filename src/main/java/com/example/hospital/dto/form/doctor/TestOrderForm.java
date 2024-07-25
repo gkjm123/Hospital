@@ -12,10 +12,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestOrderForm {
-    private Long registId;
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-    private LocalDate orderStartDate;
+  private Long registId;
 
-    private TestType testType;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  private LocalDate orderStartDate;
+
+  private TestType testType;
 }

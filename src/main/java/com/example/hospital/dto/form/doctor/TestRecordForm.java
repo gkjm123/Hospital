@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestRecordForm {
-    private Long testOrderId;
-    private String result;
+
+  private Long testOrderId;
+  private String result;
 }

@@ -3,45 +3,45 @@ package com.example.hospital.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import java.util.Date;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.util.Date;
-
 @Component
 @RequiredArgsConstructor
 public class SecurityManager {
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Value("${token.key}")
-    private String key;
+  private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public String passwordEncode(String password) {
-        return bCryptPasswordEncoder.encode(password);
-    }
+  @Value("${token.key}")
+  private String key;
 
-    public boolean checkPassword(String rawPassword, String encodedPassword) {
-        return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
-    }
+  public String passwordEncode(String password) {
+    return bCryptPasswordEncoder.encode(password);
+  }
 
-    public String createToken(String loginId) {
-        Claims claims = Jwts.claims().setSubject(loginId);
+  public boolean checkPassword(String rawPassword, String encodedPassword) {
+    return bCryptPasswordEncoder.matches(rawPassword, encodedPassword);
+  }
 
-        Date now = new Date();
-        Date expiredDate = new Date(now.getTime() + 60*60*24*1000);
+  public String createToken(String loginId) {
+    Claims claims = Jwts.claims().setSubject(loginId);
 
-        return Jwts.builder().setClaims(claims)
-                .setIssuedAt(now)
-                .setExpiration(expiredDate)
-                .signWith(SignatureAlgorithm.HS512, key)
-                .compact();
-    }
+    Date now = new Date();
+    Date expiredDate = new Date(now.getTime() + 60 * 60 * 24 * 1000);
 
-    public Claims parseToken(String token) {
-        token = token.replace("doctor ", "");
-        token = token.replace("patient ", "");
-        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
-    }
+    return Jwts.builder().setClaims(claims)
+        .setIssuedAt(now)
+        .setExpiration(expiredDate)
+        .signWith(SignatureAlgorithm.HS512, key)
+        .compact();
+  }
+
+  public Claims parseToken(String token) {
+    token = token.replace("doctor ", "");
+    token = token.replace("patient ", "");
+    return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+  }
 }

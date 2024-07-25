@@ -14,20 +14,21 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TestRecord {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private TestOrder testOrder;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    //검사결과
-    private String result;
+  @ManyToOne(fetch = FetchType.LAZY)
+  private TestOrder testOrder;
 
-    //처방일
-    @CreationTimestamp
-    private LocalDateTime orderedDate;
+  //검사결과
+  private String result;
 
-    //검사일
-    private LocalDateTime testDate;
+  //처방일
+  @CreationTimestamp
+  private LocalDateTime orderedDate;
+
+  //검사일
+  private LocalDateTime testDate;
 }

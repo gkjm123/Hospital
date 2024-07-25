@@ -13,25 +13,26 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sign")
 @RequiredArgsConstructor
 public class SignController {
-    private final SignService signService;
 
-    @PostMapping("/doctor-sign-up")
-    public DoctorResponse doctorSignUp(@RequestBody DoctorForm form) {
-        return signService.doctorSignUp(form);
-    }
+  private final SignService signService;
 
-    @GetMapping("/doctor-sign-in")
-    public String doctorSignIn(@RequestBody SignInForm form) {
-        return signService.doctorSignIn(form);
-    }
+  @PostMapping("/doctor-sign-up")
+  public DoctorResponse doctorSignUp(@RequestBody DoctorForm form) {
+    return signService.doctorSignUp(form);
+  }
 
-    @PostMapping("/patient-sign-up")
-    public PatientResponse patientSignUp(@RequestBody PatientForm form) {
-        return signService.patientSignUp(form);
-    }
+  @GetMapping("/doctor-sign-in")
+  public String doctorSignIn(@RequestBody SignInForm form) {
+    return signService.doctorSignIn(form);
+  }
 
-    @GetMapping("/patient-sign-in")
-    public String patientSignIn(@RequestBody SignInForm form) {
-        return signService.patientSignIn(form);
-    }
+  @PostMapping("/patient-sign-up")
+  public PatientResponse patientSignUp(@RequestBody PatientForm form) {
+    return signService.patientSignUp(form);
+  }
+
+  @GetMapping("/patient-sign-in")
+  public String patientSignIn(@RequestBody SignInForm form) {
+    return signService.patientSignIn(form);
+  }
 }

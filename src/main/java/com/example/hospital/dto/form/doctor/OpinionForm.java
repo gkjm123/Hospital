@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OpinionForm {
-    private Long registId;
-    private String opinion;
+
+  private Long registId;
+  private String opinion;
 }

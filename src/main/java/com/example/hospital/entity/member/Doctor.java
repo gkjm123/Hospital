@@ -20,27 +20,28 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Doctor implements UserDetails {
-    @Id
-    @GeneratedValue
-    private Long id;
 
-    private String loginId;
-    private String password;
-    private String name;
-    private String phone;
-    private String major; //전공
-    private String role;
+  @Id
+  @GeneratedValue
+  private Long id;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+  private String loginId;
+  private String password;
+  private String name;
+  private String phone;
+  private String major; //전공
+  private String role;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
-    }
+  @CreationTimestamp
+  private LocalDateTime createdAt;
 
-    @Override
-    public String getUsername() {
-        return "";
-    }
+  @Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return List.of(new SimpleGrantedAuthority(role));
+  }
+
+  @Override
+  public String getUsername() {
+    return "";
+  }
 }
