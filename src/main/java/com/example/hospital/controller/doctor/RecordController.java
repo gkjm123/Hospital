@@ -12,12 +12,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -29,67 +28,65 @@ public class RecordController {
 
   //검사 및 검사결과 기록하기
   @PreAuthorize("hasRole('DOCTOR')")
-  @PostMapping("/do-test")
-  public TestRecordResponse doTest(@RequestHeader(name = "TOKEN") String token,
-      @RequestBody TestRecordForm form
-  ) {
-    return recordService.doTest(token, form);
+  @PostMapping("/test")
+  public TestRecordResponse doTest(@RequestBody TestRecordForm form) {
+
+    return recordService.doTest(form);
   }
 
   //검사 결과 확인
   @PreAuthorize("hasRole('DOCTOR')")
-  @GetMapping("/get-test-records")
-  public List<TestRecordResponse> getTestRecords(@RequestHeader(name = "TOKEN") String token,
-      @RequestParam(name = "testorder-id") Long testOrderId
+  @GetMapping("/tests/{test-order-id}")
+  public List<TestRecordResponse> getTestRecords(
+      @PathVariable(name = "test-order-id") Long testOrderId
   ) {
-    return recordService.getTestRecords(token, testOrderId);
+
+    return recordService.getTestRecords(testOrderId);
   }
 
   //검사 결과 수정
   @PreAuthorize("hasRole('DOCTOR')")
-  @PutMapping("/update-test-record")
-  public TestRecordResponse updateTestRecord(@RequestHeader(name = "TOKEN") String token,
-      @RequestParam(name = "testrecord-id") Long testRecordId,
+  @PutMapping("/test/{test-record-id}")
+  public TestRecordResponse updateTestRecord(
+      @PathVariable(name = "test-record-id") Long testRecordId,
       @RequestBody TestRecordForm form
   ) {
-    return recordService.updateTestRecord(token, testRecordId, form);
+
+    return recordService.updateTestRecord(testRecordId, form);
   }
 
   //진단명 입력 또는 수정
   @PreAuthorize("hasRole('DOCTOR')")
   @PutMapping("/diagnosis")
-  public RegistResponse diagnosis(@RequestHeader(name = "TOKEN") String token,
-      @RequestBody DiagnosisForm form
-  ) {
-    return recordService.diagnosis(token, form);
+  public RegistResponse diagnosis(@RequestBody DiagnosisForm form) {
+
+    return recordService.diagnosis(form);
   }
 
   //소견서 작성하기
   @PreAuthorize("hasRole('DOCTOR')")
-  @PostMapping("/make-opinion")
-  public OpinionResponse makeOpinion(@RequestHeader(name = "TOKEN") String token,
-      @RequestBody OpinionForm form
-  ) {
-    return recordService.makeOpinion(token, form);
+  @PostMapping("/opinion")
+  public OpinionResponse makeOpinion(@RequestBody OpinionForm form) {
+    return recordService.makeOpinion(form);
   }
 
   //소견서 수정하기
   @PreAuthorize("hasRole('DOCTOR')")
-  @PutMapping("/update-opinion")
-  public OpinionResponse updateOpinion(@RequestHeader(name = "TOKEN") String token,
-      @RequestParam(name = "opinion-id") Long opinionId,
+  @PutMapping("/opinion/{opinion-id}")
+  public OpinionResponse updateOpinion(
+      @PathVariable(name = "opinion-id") Long opinionId,
       @RequestBody OpinionForm form
   ) {
-    return recordService.updateOpinion(token, opinionId, form);
+
+    return recordService.updateOpinion(opinionId, form);
   }
 
   //소견서 삭제하기
   @PreAuthorize("hasRole('DOCTOR')")
-  @DeleteMapping("/delete-opinion")
-  public String deleteOpinion(@RequestHeader(name = "TOKEN") String token,
-      @RequestParam(name = "opinion-id") Long opinionId
-  ) {
-    recordService.deleteOpinion(token, opinionId);
+  @DeleteMapping("/opinion/{opinion-id}")
+  public String deleteOpinion(@PathVariable(name = "opinion-id") Long opinionId) {
+
+    recordService.deleteOpinion(opinionId);
     return "소견서 삭제 완료";
   }
 }

@@ -16,22 +16,22 @@ public class SignController {
 
   private final SignService signService;
 
-  @PostMapping("/doctor-sign-up")
+  @PostMapping("/doctor/join")
   public DoctorResponse doctorSignUp(@RequestBody DoctorForm form) {
     return signService.doctorSignUp(form);
   }
 
-  @GetMapping("/doctor-sign-in")
+  @GetMapping("/doctor/login")
   public String doctorSignIn(@RequestBody SignInForm form) {
     return signService.doctorSignIn(form);
   }
 
-  @PostMapping("/patient-sign-up")
+  @PostMapping("/patient/join")
   public PatientResponse patientSignUp(@RequestBody PatientForm form) {
     return signService.patientSignUp(form);
   }
 
-  @GetMapping("/patient-sign-in")
+  @GetMapping("/patient/login")
   public String patientSignIn(@RequestBody SignInForm form) {
     return signService.patientSignIn(form);
   }
