@@ -38,7 +38,7 @@ public class RecordController {
   @PreAuthorize("hasRole('DOCTOR')")
   @GetMapping("/tests/{test-order-id}")
   public List<TestRecordResponse> getTestRecords(
-      @PathVariable(name = "test-order-id") Long testOrderId
+      @PathVariable("test-order-id") Long testOrderId
   ) {
 
     return recordService.getTestRecords(testOrderId);
@@ -48,7 +48,7 @@ public class RecordController {
   @PreAuthorize("hasRole('DOCTOR')")
   @PutMapping("/test/{test-record-id}")
   public TestRecordResponse updateTestRecord(
-      @PathVariable(name = "test-record-id") Long testRecordId,
+      @PathVariable("test-record-id") Long testRecordId,
       @RequestBody TestRecordForm form
   ) {
 
@@ -74,7 +74,7 @@ public class RecordController {
   @PreAuthorize("hasRole('DOCTOR')")
   @PutMapping("/opinion/{opinion-id}")
   public OpinionResponse updateOpinion(
-      @PathVariable(name = "opinion-id") Long opinionId,
+      @PathVariable("opinion-id") Long opinionId,
       @RequestBody OpinionForm form
   ) {
 
@@ -84,7 +84,7 @@ public class RecordController {
   //소견서 삭제하기
   @PreAuthorize("hasRole('DOCTOR')")
   @DeleteMapping("/opinion/{opinion-id}")
-  public String deleteOpinion(@PathVariable(name = "opinion-id") Long opinionId) {
+  public String deleteOpinion(@PathVariable("opinion-id") Long opinionId) {
 
     recordService.deleteOpinion(opinionId);
     return "소견서 삭제 완료";

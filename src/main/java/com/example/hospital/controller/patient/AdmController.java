@@ -38,7 +38,7 @@ public class AdmController {
   @PreAuthorize("hasRole('PATIENT')")
   @PutMapping("/medicine/{medicine-order-id}")
   public MedicineOrderResponse takeMedicine(
-      @PathVariable(name = "medicine-order-id") Long orderId
+      @PathVariable("medicine-order-id") Long orderId
   ) {
 
     return admService.takeMedicine(orderId);

@@ -60,7 +60,7 @@ public class OrderController {
   @PreAuthorize("hasRole('DOCTOR')")
   @GetMapping("/orders/{regist-id}")
   public List<BaseOrderResponse> getOrders(
-      @PathVariable(name = "regist-id") Long registId,
+      @PathVariable("regist-id") Long registId,
       @PageableDefault(sort = "orderStartTime", direction = Sort.Direction.DESC) Pageable pageable
   ) {
 
@@ -70,7 +70,7 @@ public class OrderController {
   //처방 삭제(처방 수행이 완료되기 전까지만 가능)
   @PreAuthorize("hasRole('DOCTOR')")
   @DeleteMapping("/order/{order-id}")
-  public String cancelOrder(@PathVariable(name = "order-id") Long orderId) {
+  public String cancelOrder(@PathVariable("order-id") Long orderId) {
 
     orderService.cancelOrder(orderId);
     return "처방 삭제 완료";
@@ -79,7 +79,7 @@ public class OrderController {
   //퇴원 처방
   @PreAuthorize("hasRole('DOCTOR')")
   @PutMapping("/discharge/{regist-id}")
-  public RegistResponse discharge(@PathVariable(name = "regist-id") Long registId) {
+  public RegistResponse discharge(@PathVariable("regist-id") Long registId) {
     return orderService.discharge(registId);
   }
 }
