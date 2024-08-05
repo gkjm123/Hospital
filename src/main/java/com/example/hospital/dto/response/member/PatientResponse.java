@@ -1,7 +1,7 @@
 package com.example.hospital.dto.response.member;
 
 import com.example.hospital.entity.member.Patient;
-import com.example.hospital.type.SexType;
+import com.example.hospital.type.Gender;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ public class PatientResponse {
 
   private Long id;
   private String name;
-  private SexType sex;
+  private Gender sex;
   private Long age;
   private String phone;
   private String address;

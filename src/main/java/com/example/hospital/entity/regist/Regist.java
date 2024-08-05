@@ -2,7 +2,7 @@ package com.example.hospital.entity.regist;
 
 import com.example.hospital.entity.member.Doctor;
 import com.example.hospital.entity.member.Patient;
-import com.example.hospital.type.RegistType;
+import com.example.hospital.type.RegisterStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -34,7 +34,7 @@ public class Regist {
 
   //접수상태
   @Enumerated(EnumType.STRING)
-  private RegistType registType;
+  private RegisterStatus registerStatus;
 
   //비용
   private Long cost;

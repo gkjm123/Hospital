@@ -2,7 +2,7 @@ package com.example.hospital.controller.patient;
 
 import com.example.hospital.dto.response.patient.RegistResponse;
 import com.example.hospital.service.patient.RegistService;
-import com.example.hospital.type.RegistType;
+import com.example.hospital.type.RegisterStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +32,13 @@ class RegistControllerTest {
     @Test
     void registerPatient() throws Exception {
         //given
-        given(registService.register(anyString(), any()))
+        given(registService.register(any()))
                 .willReturn(RegistResponse.builder()
                         .id(1L)
                         .doctorId(1L)
                         .patientId(1L)
                         .patientName("P")
-                        .registType(RegistType.REGISTERED)
+                        .registerStatus(RegisterStatus.REGISTERED)
                         .registrationDate(LocalDateTime.now())
                         .build());
 

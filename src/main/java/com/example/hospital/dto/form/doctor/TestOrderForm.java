@@ -1,6 +1,6 @@
 package com.example.hospital.dto.form.doctor;
 
-import com.example.hospital.type.TestType;
+import com.example.hospital.type.Test;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
@@ -18,5 +18,5 @@ public class TestOrderForm {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
   private LocalDate orderStartDate;
 
-  private TestType testType;
+  private Test test;
 }

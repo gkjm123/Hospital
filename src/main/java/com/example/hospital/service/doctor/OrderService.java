@@ -18,15 +18,15 @@ import com.example.hospital.repository.order.BaseOrderRepository;
 import com.example.hospital.repository.order.MedicineOrderRepository;
 import com.example.hospital.repository.order.TestOrderRepository;
 import com.example.hospital.repository.regist.RegistRepository;
-import com.example.hospital.security.SecurityManager;
-import com.example.hospital.type.OrderStatusType;
-import com.example.hospital.type.OrderType;
-import com.example.hospital.type.RegistType;
+import com.example.hospital.security.JwtProvider;
+import com.example.hospital.type.OrderStatus;
+import com.example.hospital.type.Order;
+import com.example.hospital.type.RegisterStatus;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
 
-  private final SecurityManager securityManager;
+  private final JwtProvider jwtProvider;
   private final DoctorRepository doctorRepository;
   private final RegistRepository registRepository;
   private final BaseOrderRepository baseOrderRepository;
@@ -42,12 +42,13 @@ public class OrderService {
   private final TestOrderRepository testOrderRepository;
 
   @Transactional(readOnly = true)
-  public Page<RegistResponse> getRegists(String token, int pageNumber) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
-    Pageable pageable = PageRequest.of(pageNumber, 10);
-    Page<Regist> regists = registRepository.findAllByDoctor_IdAndRegistType(doctor.getId(),
-        RegistType.REGISTERED, pageable);
+  public Page<RegistResponse> getRegistered(Pageable pageable) {
+
+    Doctor doctor = getDoctor();
+
+    //해당 의사에게 등록된 접수건 목록 반환
+    Page<Regist> regists = registRepository.
+        findAllByDoctor_IdAndRegistType(doctor.getId(), RegisterStatus.REGISTERED, pageable);
 
     if (regists.isEmpty()) {
       throw new CustomException(ErrorCode.LIST_EMPTY);
@@ -57,41 +58,42 @@ public class OrderService {
   }
 
   @Transactional
-  public MedicineOrderResponse orderMedicine(String token, MedicineOrderForm form) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
+  public MedicineOrderResponse orderMedicine(MedicineOrderForm form) {
+
+    Doctor doctor = getDoctor();
 
     Regist regist = registRepository.findById(form.getRegistId())
         .orElseThrow(() -> new CustomException(ErrorCode.REGIST_NOT_FOUND));
 
+    //접수건의 담당 의사가 맞는지 체크
     if (!regist.getDoctor().getId().equals(doctor.getId())) {
       throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
     }
 
-    //약 처방하기: 약 종류,타입,복용량 등을 폼에서 읽어와서 세팅한다.
     MedicineOrder medicineOrder = MedicineOrder.builder()
         .regist(regist)
-        .orderType(OrderType.MEDICINE)
-        .orderStatusType(OrderStatusType.ORDERED)
+        .order(Order.MEDICINE)
+        .orderStatus(OrderStatus.ORDERED)
         .orderStartTime(form.getOrderStartDate())
-        .medicineType(form.getMedicineType())
+        .medicine(form.getMedicine())
         .volume(form.getVolume())
-        .takeType(form.getTakeType())
+        .takePerDay(form.getTakePerDay())
         .takeDate(form.getTakeDate())
         .build();
 
     //약 비용 = 한알당 가격 * 일회 복용량 * 하루 복용횟수 * 복용일수
-    Long cost = form.getMedicineType().getCost() * form.getVolume() * form.getTakeType().getTime()
+    Long cost = form.getMedicine().getCost() * form.getVolume() * form.getTakePerDay().getTime()
         * form.getTakeDate();
+
     medicineOrder.setCost(cost);
 
     return MedicineOrderResponse.fromEntity(medicineOrderRepository.save(medicineOrder));
   }
 
   @Transactional
-  public TestOrderResponse orderTest(String token, TestOrderForm form) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
+  public TestOrderResponse orderTest(TestOrderForm form) {
+
+    Doctor doctor = getDoctor();
 
     Regist regist = registRepository.findById(form.getRegistId())
         .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
@@ -102,21 +104,22 @@ public class OrderService {
 
     TestOrder testOrder = TestOrder.builder()
         .regist(regist)
-        .orderType(OrderType.TEST)
-        .orderStatusType(OrderStatusType.ORDERED)
+        .order(Order.TEST)
+        .orderStatus(OrderStatus.ORDERED)
         .orderStartTime(form.getOrderStartDate())
-        .testType(form.getTestType())
+        .test(form.getTest())
         .build();
 
-    //검사는 타입에 따라 비용이 정해져있고 특별한 추가 계산이 필요 없다.
-    testOrder.setCost(form.getTestType().getCost());
+    //비용 세팅
+    testOrder.setCost(form.getTest().getCost());
+
     return TestOrderResponse.fromEntity(testOrderRepository.save(testOrder));
   }
 
   @Transactional(readOnly = true)
-  public List<BaseOrderResponse> getOrders(String token, Long registId, int pageNumber) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
+  public List<BaseOrderResponse> getOrders(Long registId, Pageable pageable) {
+
+    Doctor doctor = getDoctor();
 
     Regist regist = registRepository.findById(registId)
         .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
@@ -125,10 +128,7 @@ public class OrderService {
       throw new CustomException(ErrorCode.DOCTOR_NOT_MATCH);
     }
 
-    Pageable pageable = PageRequest.of(pageNumber, 10);
-
-    Page<BaseOrder> orders = baseOrderRepository
-        .findAllByRegist_IdOrderByOrderStartTimeDesc(registId, pageable);
+    Page<BaseOrder> orders = baseOrderRepository.findAllByRegist_Id(registId, pageable);
 
     if (orders.isEmpty()) {
       throw new CustomException(ErrorCode.LIST_EMPTY);
@@ -138,9 +138,9 @@ public class OrderService {
   }
 
   @Transactional
-  public void cancelOrder(String token, Long orderId) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
+  public void cancelOrder(Long orderId) {
+
+    Doctor doctor = getDoctor();
 
     BaseOrder order = baseOrderRepository.findById(orderId)
         .orElseThrow(() -> new CustomException(ErrorCode.ORDER_NOT_FOUND));
@@ -150,12 +150,12 @@ public class OrderService {
     }
 
     //진행중인 접수건에 대해서만 처방 삭제 가능
-    if (!order.getRegist().getRegistType().equals(RegistType.REGISTERED)) {
+    if (!order.getRegist().getRegisterStatus().equals(RegisterStatus.REGISTERED)) {
       throw new CustomException(ErrorCode.REGIST_STATUS_NOT_PRESENT);
     }
 
-    //약이 불출되었거나 검사가 진행되었으면 오더 타입이 Completed 로 변경되며 이때는 처방 삭제 불가
-    if (order.getOrderStatusType().equals(OrderStatusType.COMPLETED)) {
+    //약이 불출 되었거나 검사가 진행 되었으면 처방 삭제 불가
+    if (order.getOrderStatus().equals(OrderStatus.COMPLETED)) {
       throw new CustomException(ErrorCode.ORDER_COMPLETED);
     }
 
@@ -163,9 +163,9 @@ public class OrderService {
   }
 
   @Transactional
-  public RegistResponse discharge(String token, Long registId) {
-    Doctor doctor = doctorRepository.findByLoginId(securityManager.parseToken(token).getSubject())
-        .get();
+  public RegistResponse discharge(Long registId) {
+
+    Doctor doctor = getDoctor();
 
     Regist regist = registRepository.findById(registId)
         .orElseThrow(() -> new CustomException(ErrorCode.ID_PASSWORD_INVALID));
@@ -175,17 +175,21 @@ public class OrderService {
     }
 
     //진행중인 접수건에 대해서만 퇴원 처방 가능
-    if (!regist.getRegistType().equals(RegistType.REGISTERED)) {
+    if (!regist.getRegisterStatus().equals(RegisterStatus.REGISTERED)) {
       throw new CustomException(ErrorCode.REGIST_STATUS_NOT_PRESENT);
     }
 
-    //퇴원하는 접수건에 등록된 모든 처방(약, 검사)의 비용을 합산한 최종 입원료를 접수건에 업데이트
+    //총 입원료 계산
     Long cost = baseOrderRepository.findAll().stream().mapToLong(BaseOrder::getCost).sum();
     regist.setCost(cost);
 
     //접수건의 상태를 퇴원 대기중으로 바꾼다. 이 상태에서만 환자가 정산 가능
-    regist.setRegistType(RegistType.WAIT_FOR_PAY);
+    regist.setRegisterStatus(RegisterStatus.WAIT_FOR_PAY);
 
     return RegistResponse.fromEntity(registRepository.save(regist));
+  }
+
+  private Doctor getDoctor() {
+    return (Doctor) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
   }
 }

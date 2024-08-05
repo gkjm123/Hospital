@@ -1,6 +1,7 @@
 package com.example.hospital.entity.member;
 
-import com.example.hospital.type.SexType;
+import com.example.hospital.type.Role;
+import com.example.hospital.type.Gender;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -29,19 +30,19 @@ public class Patient implements UserDetails {
   private String name;
 
   @Enumerated(EnumType.STRING)
-  private SexType sex;
+  private Gender sex;
 
   private Long age;
   private String phone;
   private String address;
-  private String role;
+  private Role role;
 
   @CreationTimestamp
   private LocalDateTime createdAt;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role));
+    return List.of(new SimpleGrantedAuthority(role.toString()));
   }
 
   @Override

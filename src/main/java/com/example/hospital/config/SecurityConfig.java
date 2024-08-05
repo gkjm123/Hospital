@@ -1,9 +1,9 @@
 package com.example.hospital.config;
 
-import com.example.hospital.security.AuthenticationFilter;
 import com.example.hospital.security.DoctorDetailService;
+import com.example.hospital.security.JwtFilter;
 import com.example.hospital.security.PatientDetailService;
-import com.example.hospital.security.SecurityManager;
+import com.example.hospital.security.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,8 +21,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+  private final JwtProvider jwtProvider;
   private final DoctorDetailService doctorDetailService;
-  private final SecurityManager securityManager;
   private final PatientDetailService patientDetailService;
 
   @Bean
@@ -37,10 +37,13 @@ public class SecurityConfig {
                 .anyRequest().authenticated()
         );
 
-    http.addFilterBefore(
-        new AuthenticationFilter(doctorDetailService, securityManager, patientDetailService),
-        UsernamePasswordAuthenticationFilter.class
-    );
+    http //JWT 토큰 확인 필터를 UsernamePasswordAuthenticationFilter 보다 앞에 위치
+        .addFilterBefore(new JwtFilter(jwtProvider, doctorDetailService, patientDetailService),
+            UsernamePasswordAuthenticationFilter.class);
+
+    http //폼 로그인, csrf disable
+        .formLogin(AbstractHttpConfigurer::disable)
+        .csrf(AbstractHttpConfigurer::disable);
 
     return http.build();
   }

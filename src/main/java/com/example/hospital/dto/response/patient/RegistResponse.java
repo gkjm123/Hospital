@@ -1,7 +1,7 @@
 package com.example.hospital.dto.response.patient;
 
 import com.example.hospital.entity.regist.Regist;
-import com.example.hospital.type.RegistType;
+import com.example.hospital.type.RegisterStatus;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -19,7 +19,7 @@ public class RegistResponse {
   private String patientName;
   private Long cost;
   private String diagnosis;
-  private RegistType registType;
+  private RegisterStatus registerStatus;
   private LocalDateTime registrationDate;
   private LocalDateTime dischargeDate;
 
@@ -31,7 +31,7 @@ public class RegistResponse {
         .patientName(regist.getPatient().getName())
         .cost(regist.getCost())
         .diagnosis(regist.getDiagnosis())
-        .registType(regist.getRegistType())
+        .registerStatus(regist.getRegisterStatus())
         .registrationDate(regist.getRegistrationDate())
         .dischargeDate(regist.getDischargeDate())
         .build();

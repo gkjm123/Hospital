@@ -15,11 +15,11 @@ import org.springframework.stereotype.Service;
 public class DoctorDetailService implements MemberDetailService {
 
   private final DoctorRepository doctorRepository;
-  private final SecurityManager securityManager;
+  private final JwtProvider jwtProvider;
 
   @Override
   public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException {
-    String loginId = securityManager.parseToken(token).getSubject();
+    String loginId = jwtProvider.parseToken(token).getSubject();
     return doctorRepository.findByLoginId(loginId)
         .orElseThrow(() -> new CustomException(ErrorCode.DOCTOR_NOT_FOUND));
   }

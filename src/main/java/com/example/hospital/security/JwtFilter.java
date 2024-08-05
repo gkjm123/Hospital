@@ -14,22 +14,26 @@ import org.springframework.web.filter.OncePerRequestFilter;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class AuthenticationFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
+  private final JwtProvider jwtProvider;
   private final DoctorDetailService doctorDetailService;
-  private final SecurityManager securityManager;
   private final PatientDetailService patientDetailService;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
+
     String token = request.getHeader("TOKEN");
 
-    if (token != null && securityManager.parseToken(token) != null) {
+    if (token != null && jwtProvider.parseToken(token) != null) {
+
       if (token.startsWith("doctor ")) {
         SecurityContextHolder.getContext()
             .setAuthentication(doctorDetailService.getAuthentication(token));
-      } else if (token.startsWith("patient ")) {
+      }
+
+      else if (token.startsWith("patient ")) {
         SecurityContextHolder.getContext()
             .setAuthentication(patientDetailService.getAuthentication(token));
       }

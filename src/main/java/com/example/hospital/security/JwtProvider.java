@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class SecurityManager {
+public class JwtProvider {
 
   private final BCryptPasswordEncoder bCryptPasswordEncoder;
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum MedicineType {
+public enum Medicine {
   PAIN_MED("진통제", "알약", 1000L),
   FEVER_MED("해열제", "알약", 500L),
   ANTIBIOTIC_MED("항생제", "주사약", 2000L);

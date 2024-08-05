@@ -1,5 +1,6 @@
 package com.example.hospital.entity.member;
 
+import com.example.hospital.type.Role;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -30,14 +31,14 @@ public class Doctor implements UserDetails {
   private String name;
   private String phone;
   private String major; //전공
-  private String role;
+  private Role role;
 
   @CreationTimestamp
   private LocalDateTime createdAt;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority(role));
+    return List.of(new SimpleGrantedAuthority(role.toString()));
   }
 
   @Override

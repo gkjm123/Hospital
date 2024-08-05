@@ -1,10 +1,10 @@
 package com.example.hospital.dto.response.doctor;
 
 import com.example.hospital.entity.order.MedicineOrder;
-import com.example.hospital.type.MedicineType;
-import com.example.hospital.type.OrderStatusType;
-import com.example.hospital.type.OrderType;
-import com.example.hospital.type.TakeType;
+import com.example.hospital.type.Medicine;
+import com.example.hospital.type.OrderStatus;
+import com.example.hospital.type.Order;
+import com.example.hospital.type.TakePerDay;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,28 +19,28 @@ public class MedicineOrderResponse {
 
   private Long id;
   private Long registId;
-  private OrderType orderType;
-  private OrderStatusType orderStatusType;
+  private Order order;
+  private OrderStatus orderStatus;
   private Long cost;
   private LocalDateTime orderCreateTime;
   private LocalDate orderStartDate;
-  private MedicineType medicineType;
+  private Medicine medicine;
   private Long volume;
-  private TakeType takeType;
+  private TakePerDay takePerDay;
   private Long takeDate;
 
   public static MedicineOrderResponse fromEntity(MedicineOrder medicineOrder) {
     return MedicineOrderResponse.builder()
         .id(medicineOrder.getId())
         .registId(medicineOrder.getRegist().getId())
-        .orderType(medicineOrder.getOrderType())
-        .orderStatusType(medicineOrder.getOrderStatusType())
+        .order(medicineOrder.getOrder())
+        .orderStatus(medicineOrder.getOrderStatus())
         .cost(medicineOrder.getCost())
         .orderCreateTime(medicineOrder.getOrderCreateTime())
         .orderStartDate(medicineOrder.getOrderStartTime())
-        .medicineType(medicineOrder.getMedicineType())
+        .medicine(medicineOrder.getMedicine())
         .volume(medicineOrder.getVolume())
-        .takeType(medicineOrder.getTakeType())
+        .takePerDay(medicineOrder.getTakePerDay())
         .takeDate(medicineOrder.getTakeDate())
         .build();
   }

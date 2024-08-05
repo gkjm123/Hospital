@@ -18,40 +18,40 @@ public class BaseOrderResponse {
 
   private Long id;
   private Long registId;
-  private OrderType orderType;
-  private OrderStatusType orderStatusType;
+  private Order order;
+  private OrderStatus orderStatus;
   private Long cost;
   private LocalDateTime orderCreateTime;
   private LocalDate orderStartDate;
 
-  private MedicineType medicineType;
+  private Medicine medicine;
   private Long volume;
-  private TakeType takeType;
+  private TakePerDay takePerDay;
   private Long takeDate;
 
-  private TestType testType;
+  private Test test;
 
   public static BaseOrderResponse fromEntity(BaseOrder baseOrder) {
     BaseOrderResponse response = BaseOrderResponse.builder()
         .id(baseOrder.getId())
         .registId(baseOrder.getRegist().getId())
-        .orderType(baseOrder.getOrderType())
-        .orderStatusType(baseOrder.getOrderStatusType())
+        .order(baseOrder.getOrder())
+        .orderStatus(baseOrder.getOrderStatus())
         .cost(baseOrder.getCost())
         .orderCreateTime(baseOrder.getOrderCreateTime())
         .orderStartDate(baseOrder.getOrderStartTime())
         .build();
 
-    if (baseOrder.getOrderType().equals(OrderType.MEDICINE)) {
+    if (baseOrder.getOrder().equals(Order.MEDICINE)) {
       MedicineOrder medicineOrder = (MedicineOrder) baseOrder;
 
-      response.setMedicineType(medicineOrder.getMedicineType());
+      response.setMedicine(medicineOrder.getMedicine());
       response.setVolume(medicineOrder.getVolume());
-      response.setTakeType(medicineOrder.getTakeType());
+      response.setTakePerDay(medicineOrder.getTakePerDay());
       response.setTakeDate(medicineOrder.getTakeDate());
-    } else if (baseOrder.getOrderType().equals(OrderType.TEST)) {
+    } else if (baseOrder.getOrder().equals(Order.TEST)) {
       TestOrder testOrder = (TestOrder) baseOrder;
-      response.setTestType(testOrder.getTestType());
+      response.setTest(testOrder.getTest());
     }
 
     return response;
