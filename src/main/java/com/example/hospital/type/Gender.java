@@ -1,5 +1,5 @@
 package com.example.hospital.type;
 
-public enum SexType {
+public enum Gender {
   MALE, FEMALE
 }

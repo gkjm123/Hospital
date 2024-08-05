@@ -1,6 +1,6 @@
 package com.example.hospital.entity.order;
 
-import com.example.hospital.type.TestType;
+import com.example.hospital.type.Test;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -17,5 +17,5 @@ public class TestOrder extends BaseOrder {
 
   //검사 종류
   @Enumerated(EnumType.STRING)
-  private TestType testType;
+  private Test test;
 }

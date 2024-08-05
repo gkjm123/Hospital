@@ -1,8 +1,8 @@
 package com.example.hospital.entity.order;
 
 import com.example.hospital.entity.regist.Regist;
-import com.example.hospital.type.OrderStatusType;
-import com.example.hospital.type.OrderType;
+import com.example.hospital.type.OrderStatus;
+import com.example.hospital.type.Order;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -29,11 +29,11 @@ public class BaseOrder {
 
   //처방 종류(약, 검사)
   @Enumerated(EnumType.STRING)
-  private OrderType orderType;
+  private Order order;
 
   //처방의 진행상태
   @Enumerated(EnumType.STRING)
-  private OrderStatusType orderStatusType;
+  private OrderStatus orderStatus;
 
   //비용
   private Long cost;

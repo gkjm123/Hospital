@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum TestType {
+public enum Test {
   BLOOD_TEST(3000L),
   X_RAY(5000L),
   CT(10000L),
